@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: accounts-management-api
+    runtime: docker
+    plan: free
+    branch: main
+    autoDeployTrigger: commit
+    healthCheckPath: /v3/api-docs
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_NAME
+        value: postgres
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSL_MODE
+        value: require
+      - key: KAFKA_BOOTSTRAP_SERVERS
+        sync: false
+      - key: KAFKA_SECURITY_PROTOCOL
+        value: SASL_SSL
+      - key: KAFKA_SASL_MECHANISM
+        value: SCRAM-SHA-256
+      - key: KAFKA_SASL_USERNAME
+        sync: false
+      - key: KAFKA_SASL_PASSWORD
+        sync: false
+      - key: KAFKA_SSL_CA_CERTIFICATE
+        sync: false
+      - key: KAFKA_TOPIC_NOTIFICATIONS
+        value: notifications-events
