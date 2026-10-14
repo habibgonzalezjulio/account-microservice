@@ -3,6 +3,7 @@ package com.accounts.accountsmanagement.infrastructure.adapter.messaging;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.accounts.accountsmanagement.application.port.out.PublishDomainEventPort;
+import com.accounts.accountsmanagement.domain.event.AccountCreatedDomainEvent;
 import com.accounts.accountsmanagement.domain.event.DomainEvent;
 import com.accounts.accountsmanagement.infrastructure.adapter.messaging.config.KafkaTopicConfig;
 import com.accounts.accountsmanagement.infrastructure.adapter.messaging.dto.EventMessage;
@@ -20,8 +21,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KafkaEventPublisherAdapter implements PublishDomainEventPort {
 
-  private static final String PAYLOAD_KEY_ID = "id";
-
   private static final String LOG_PUBLISH_FAILED =
       "[KafkaEventPublisherAdapter] evento no publicado. event={} key={} errorType={}";
   private static final String LOG_PUBLISH_OK =
@@ -33,7 +32,7 @@ public class KafkaEventPublisherAdapter implements PublishDomainEventPort {
 
   @Override
   public void publish(final DomainEvent event) {
-    final String key = event.payload().get(PAYLOAD_KEY_ID);
+    final String key = event.payload().get(AccountCreatedDomainEvent.PAYLOAD_KEY_ACCOUNT_ID);
     final String json = serialize(event);
     try {
       kafkaTemplate

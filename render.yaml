@@ -31,5 +31,5 @@ services:
         sync: false
       - key: KAFKA_SSL_CA_CERTIFICATE
         sync: false
-      - key: KAFKA_TOPIC_NOTIFICATIONS
-        value: notifications-events
+      - key: KAFKA_TOPIC_ACCOUNT_EVENTS
+        value: account-events

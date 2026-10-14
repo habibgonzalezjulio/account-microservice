@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record CreateAccountRestRequest(
-    @NotBlank(message = "id must not be blank") String id,
+    // Opcional: si no se envia, se genera un UUID
+    String accountId,
     @NotBlank(message = "userId must not be blank") String userId,
     @NotBlank(message = "ownerName must not be blank")
         @Size(min = 3, message = "ownerName must have at least 3 characters")

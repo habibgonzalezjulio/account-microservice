@@ -1,6 +1,7 @@
 package com.accounts.accountsmanagement.application.service;
 
 import com.accounts.accountsmanagement.application.port.in.CreateAccountUseCase;
+import com.accounts.accountsmanagement.application.port.out.GetAccountByIdPort;
 import com.accounts.accountsmanagement.application.port.out.GetAccountByOwnerAndTypePort;
 import com.accounts.accountsmanagement.application.port.out.PublishDomainEventPort;
 import com.accounts.accountsmanagement.application.port.out.SaveAccountPort;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class CreateAccountService implements CreateAccountUseCase {
 
   private final SaveAccountPort saveAccountPort;
+  private final GetAccountByIdPort getAccountByIdPort;
   private final GetAccountByOwnerAndTypePort getAccountByOwnerAndTypePort;
   private final PublishDomainEventPort publishDomainEventPort;
   private final Validator validator;
@@ -36,6 +38,7 @@ public class CreateAccountService implements CreateAccountUseCase {
     ensureOwnerHasNoAccountOfType(ownerUserId, type);
 
     final AccountModel accountToSave = AccountApplicationMapper.fromCreateCommandToModel(command);
+    ensureAccountIdIsFree(accountToSave);
     final AccountModel savedAccount = saveAccountPort.save(accountToSave);
 
     publishDomainEventPort.publish(new AccountCreatedDomainEvent(savedAccount));
@@ -48,6 +51,15 @@ public class CreateAccountService implements CreateAccountUseCase {
     if (!violations.isEmpty()) {
       throw new ConstraintViolationException(violations);
     }
+  }
+
+  private void ensureAccountIdIsFree(final AccountModel account) {
+    getAccountByIdPort
+        .getById(account.getId())
+        .ifPresent(
+            ignored -> {
+              throw AccountAlreadyExistsException.becauseIdAlreadyExists(account.getId().value());
+            });
   }
 
   private void ensureOwnerHasNoAccountOfType(

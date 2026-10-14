@@ -1,6 +1,7 @@
 package com.accounts.accountsmanagement.domain.event;
 
 import com.accounts.accountsmanagement.domain.model.AccountModel;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Getter;
 
@@ -8,6 +9,7 @@ import lombok.Getter;
 public final class AccountCreatedDomainEvent extends DomainEvent {
 
   private static final String EVENT_NAME = "account.created";
+  public static final String PAYLOAD_KEY_ACCOUNT_ID = "accountId";
 
   private final AccountModel account;
 
@@ -18,12 +20,11 @@ public final class AccountCreatedDomainEvent extends DomainEvent {
 
   @Override
   public Map<String, String> payload() {
-    return Map.of(
-        "id", account.getId().value(),
-        "userId", account.getOwnerUserId().value(),
-        "name", account.getOwnerName().value(),
-        "email", account.getOwnerEmail().value(),
-        "type", account.getType().name(),
-        "status", account.getStatus().name());
+    final Map<String, String> payload = new LinkedHashMap<>();
+    payload.put(PAYLOAD_KEY_ACCOUNT_ID, account.getId().value());
+    payload.put("userId", account.getOwnerUserId().value());
+    payload.put("ownerName", account.getOwnerName().value());
+    payload.put("ownerEmail", account.getOwnerEmail().value());
+    return payload;
   }
 }

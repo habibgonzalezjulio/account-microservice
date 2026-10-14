@@ -1,7 +1,7 @@
 package com.accounts.accountsmanagement.infrastructure.entrypoint.rest.dto.response;
 
 public record AccountRestResponse(
-    String id,
+    String accountId,
     String userId,
     String ownerName,
     String ownerEmail,

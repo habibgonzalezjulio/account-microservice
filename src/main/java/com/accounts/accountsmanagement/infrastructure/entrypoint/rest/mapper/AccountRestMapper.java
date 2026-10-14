@@ -13,7 +13,11 @@ public class AccountRestMapper {
 
   public CreateAccountCommand toCreateCommand(final CreateAccountRestRequest request) {
     return new CreateAccountCommand(
-        request.id(), request.userId(), request.ownerName(), request.ownerEmail(), request.type());
+        request.accountId(),
+        request.userId(),
+        request.ownerName(),
+        request.ownerEmail(),
+        request.type());
   }
 
   public GetAccountByIdQuery toGetByIdQuery(final String id) {
